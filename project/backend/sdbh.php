@@ -17,14 +17,25 @@ class sdbh_tables_exception extends sdbh_exception {
 }
 
 class sdbh {
+
+    protected $port;
+    protected $host;
+    protected $dbname;
+    protected $user;
+    protected $pass;
+    protected $sql_read;
+    protected $sql_write;
+    protected $sql;
+
 	function __construct($force_master = false){
 		$this->port = 3306;
 		$this -> host = 'localhost';
 		$this -> dbname = 'test_a25';
-		$this -> user = 'root';
+		$this -> user = '';
 		$this -> pass = '';
 		$mysql_conn = mysqli_connect($this -> host, $this -> user, $this -> pass, $this -> dbname, $this->port);
-	
+        // установка единой кодировки с БД
+        $mysql_conn->set_charset('utf8mb4');
 		$this -> sql_read = $mysql_conn;
 		$this -> sql_write = false;
 	}

@@ -1,0 +1,3 @@
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !^/project/
+RewriteRule ^(.*)$ /project/$1 [L]
