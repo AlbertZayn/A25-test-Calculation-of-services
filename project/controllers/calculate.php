@@ -1,5 +1,5 @@
 <?php
-require_once 'backend/sdbh.php';
+require_once __DIR__ . '/../backend/sdbh.php';
 $dbh = new sdbh();
 
 // Функция для получения и исправления сериализованных данных
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $price = $product['PRICE'];
     $tariff = !empty($product['TARIFF']) ? unserialize($product['TARIFF']) : [];
 
-    // Определение цены в зависимости от количества дней
+    // Цена в зависимости от тарифа и дней
     if (!empty($tariff)) {
         foreach ($tariff as $day => $tariffPrice) {
             if ($days >= $day) {
@@ -33,20 +33,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
     }
-
-    // Рассчет итоговой стоимости
+    // Итоговая стоимость
     $totalCost = $price * $days;
 
-    // Добавление стоимости дополнительных услуг
+    // Добавление стоимости доп. услуг
     $services = getSerializedData($dbh, 'a25_settings', 'services');
-
     foreach ($selectedServices as $serviceKey) {
         if (isset($services[$serviceKey])) {
             $totalCost += $services[$serviceKey] * $days;
         }
     }
 
-    // Перенаправление на главную страницу с выводом итоговой стоимости
-    header("Location: index.php?total=$totalCost");
+    echo $totalCost;
 }
 ?>
